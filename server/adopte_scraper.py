@@ -92,10 +92,12 @@ for i in range(10):  # de 0 à 9
 ##########################################################
 # On récupère les infos des produits                     #
 ##########################################################
+products_infos = []
 for product_link in product_links:
     response = requests.get(product_link)
     response.encoding = response.apparent_encoding
     if response.status_code == 200:
+        product_infos = []
         html = response.text
         # f = open("page" + str(j) + ".html", "w")
         # f.write(html)
@@ -111,12 +113,15 @@ for product_link in product_links:
         if stock_p:
             stock = stock_p.text
         # On récupère les photos
-        image = soup.find("img", class_="img-responsive").get("src")
+        images_div = soup.find("div", class_="product-thumbs-vertical-slider")
+        images_links = images_div.findAll("img", class_="img-responsive")
         # On récupère la description du produit
-        # desc_div = soup.find("div", class_="tab-content")
-        # desc = desc_div.findAll("li")
+        desc_div = soup.find("div", class_="tab-content")
+        # On créer un tableau avec toutes les infos
+        i = [title, price, stock,[img.get("src") for img in images_links], desc_div]
+        products_infos.append(i)
+#print(products_infos)
 
-        print("Image : \n", image)
 # On récupère le titre
 # titre = soup.find("h1").text
 # print(titre)
